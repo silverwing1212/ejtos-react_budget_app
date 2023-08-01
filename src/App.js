@@ -1,47 +1,60 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { TiDelete } from 'react-icons/ti';
+import { AppContext } from '../context/AppContext';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+const ExpenseItem = (props) => {
+    const { dispatch, currency } = useContext(AppContext);
 
-//Code to import Budget.js
-import Budget from './components/Budget';
+    const handleDeleteExpense = () => {
+        dispatch({
+            type: 'DELETE_EXPENSE',
+            payload: props.id,
+        });
+    };
 
-// Add code to import the other components here under
-import Remaining from './components/Remaining';
-import ExpenseTotal from './components/ExpenseTotal';
-import ExpenseList from './components/ExpenseList';
-import AllocationForm from './components/AllocationForm';
+    const increaseAllocation = (name) => {
+        const expense = {
+            name: name,
+            cost: 10,
+        };
 
-import { AppProvider } from './context/AppContext';
-const App = () => {
+        dispatch({
+            type: 'ADD_EXPENSE',
+            payload: expense
+        });
+
+    }
+
+    const decreaseAllocation = (name) => {
+        const expense = {
+            name: name,
+            cost: 10,
+        };
+
+        dispatch({
+            type: 'RED_EXPENSE',
+            payload: expense
+        });
+
+    }
+
     return (
-        <AppProvider>
-            <div className='container'>
-                <h1 className='mt-3'>Company's Budget Allocation</h1>
-                <div className='row mt-3'>
-                    <div className='col-sm'>
-                        <Budget />
-                    </div>       
-                    <div className='col-sm'>
-                        <Remaining />
-                    </div>
-                    <div className='col-sm'>
-                        <ExpenseTotal />
-                    </div>
-                </div>
-                <h3 className="mt-3">Allocation</h3>
-                <div className='row mt-3'>
-                    <div className='col-sm'>
-                        <ExpenseList />
-                    </div>
-                </div>
-                <h3 className="mt-3">Change Allocation</h3>
-                <div className='row mt-3'>
-                    <div className='col-sm'>
-                        <AllocationForm />
-                    </div>
-                </div>
-            </div>
-        </AppProvider>
+        <tr>
+        <td>{props.name}</td>
+        <td>{currency}{props.cost}</td>
+        <td>
+            <button onClick={event=> increaseAllocation(props.name)}>
+                +
+            </button>
+        </td>
+        <td>
+            <button  onClick={event=> decreaseAllocation(props.name)}>
+                -
+            </button>
+        </td>
+        <td><TiDelete size='1.5em' onClick={handleDeleteExpense}></TiDelete></td>
+        </tr>
     );
 };
-export default App;
+
+export default ExpenseItem;
